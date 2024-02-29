@@ -1,11 +1,8 @@
-package com.brayandev.movilboxapp.data.remote.model
+package com.brayandev.movilboxapp.domain.model
 
-import android.os.Parcelable
-import com.brayandev.movilboxapp.domain.model.ProductModel
-import kotlinx.parcelize.Parcelize
+import com.brayandev.movilboxapp.data.local.dataBase.entity.ProductEntity
 
-@Parcelize
-data class ProductResponse(
+data class ProductModel(
     val id: Int,
     val title: String,
     val description: String,
@@ -17,9 +14,9 @@ data class ProductResponse(
     val category: String,
     val thumbnail: String,
     val images: List<String>,
-) : Parcelable
+)
 
-fun ProductResponse.toProductDomain() = ProductModel(
+fun ProductModel.toProductEntity() = ProductEntity(
     id = id,
     title = title,
     description = description,

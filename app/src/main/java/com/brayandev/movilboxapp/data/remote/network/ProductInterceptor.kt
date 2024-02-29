@@ -1,4 +1,4 @@
-package com.brayandev.movilboxapp.data.remote
+package com.brayandev.movilboxapp.data.remote.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -1,4 +1,4 @@
-package com.brayandev.movilboxapp.data.remote
+package com.brayandev.movilboxapp.data.remote.network
 
 import com.brayandev.movilboxapp.data.remote.model.ProductListResponse
 import retrofit2.Response

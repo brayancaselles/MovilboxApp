@@ -1,7 +1,7 @@
 package com.brayandev.movilboxapp.data.di
 
-import com.brayandev.movilboxapp.data.remote.ApiService
-import com.brayandev.movilboxapp.data.remote.ProductInterceptor
+import com.brayandev.movilboxapp.data.remote.network.ApiService
+import com.brayandev.movilboxapp.data.remote.network.ProductInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +18,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @ApiUrl
     fun provideBaseUrl(): String = "https://dummyjson.com/"
 
     @Provides
@@ -29,11 +30,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(@ApiUrl baseUrl: String, okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder().baseUrl(baseUrl)
+    fun provideRetrofit(@ApiUrl baseUrl: String, okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
+    }
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
 }
