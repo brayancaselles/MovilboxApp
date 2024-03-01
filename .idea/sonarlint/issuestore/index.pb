@@ -132,3 +132,7 @@ Kapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/DataBase.kt,9\
 Vapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/converter/Converter.kt,e\9\e97d6a27becef4b7219f39c9099f46a67560bd53
 …
 Uapp/src/main/java/com/brayandev/movilboxapp/data/remote/network/ProductInterceptor.kt,3\a\3a9b76a65ba90790d31631a56b5a203f1e944a1a
+‚
+Rapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/dao/CategoryDao.kt,6\a\6a794d0001aefd03c8ebca033848392b0d004928
+ˆ
+Xapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/entity/CategoryEntity.kt,7\f\7fba52198c241cdb17c55c4b378de1a2ec473e77
