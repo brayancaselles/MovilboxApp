@@ -2,4 +2,6 @@
     <string name="app_name">MovilboxApp</string>
 
     <string name="text_title_top_app_bar">Productos</string>
+    <string name="text_search_product">Buscar Productos por nombre</string>
+    <string name="text_name_product">Nombre del producto</string>
 </resources>

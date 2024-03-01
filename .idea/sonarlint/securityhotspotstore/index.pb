@@ -102,8 +102,6 @@ Q.idea/sonarlint/securityhotspotstore/e/c/ec64b0b8d2283937ae0a71cbdae67842cd8988
 Mapp/src/main/java/com/brayandev/movilboxapp/data/remote/network/ApiService.kt,c\3\c3f24aa13132ac75de38b046ddff62f0ec86de10
 Å
 Qapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/dao/ProductDao.kt,4\d\4d5cfee61570d5fa009974405d52aaafbc088844
-~
-Napp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/AllDataBase.kt,a\9\a918f190fcfe6e5a651b46402c614e01b6cc2ab8
 á
 Wapp/src/main/java/com/brayandev/movilboxapp/data/local/dataBase/entity/ProductEntity.kt,a\9\a9de7123c6c5adeec102f6f5570204af7e43d78e
 Ä
