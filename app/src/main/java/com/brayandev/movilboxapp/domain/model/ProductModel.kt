@@ -16,7 +16,7 @@ data class ProductModel(
     val images: List<String>,
 )
 
-fun ProductModel.toProductEntity() = ProductEntity(
+fun ProductModel.productModelToProductEntity() = ProductEntity(
     id = id,
     title = title,
     description = description,

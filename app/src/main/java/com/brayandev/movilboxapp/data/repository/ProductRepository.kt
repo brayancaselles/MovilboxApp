@@ -16,10 +16,18 @@ class ProductRepository @Inject constructor(
 
     suspend fun requestProducts() {
         val isDBEmpty = localDataSource.countProducts() == 0
-        if (isDBEmpty) {
-            localDataSource.insertAllProduct(
-                remoteDataSource.requestProductsFromApi().map { it.toProductDomain() },
-            )
+
+        when (isDBEmpty) {
+            true -> {
+                localDataSource.insertAllProduct(
+                    remoteDataSource.requestProductsFromApi().map { it.toProductDomain() },
+                )
+            }
+
+            false -> {
+                val request = remoteDataSource.requestProductsFromApi().map { it.toProductDomain() }
+                localDataSource.insertAllProduct(request)
+            }
         }
     }
 }

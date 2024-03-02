@@ -1,5 +1,6 @@
 package com.brayandev.movilboxapp.ui.views.products
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Category
@@ -58,14 +61,17 @@ import com.brayandev.movilboxapp.R
 import com.brayandev.movilboxapp.domain.model.ProductModel
 import com.brayandev.movilboxapp.ui.theme.BackgroundItem
 import com.brayandev.movilboxapp.ui.theme.TextColor
-import com.brayandev.movilboxapp.ui.views.products.ProductUiState.Error
-import com.brayandev.movilboxapp.ui.views.products.ProductUiState.Loading
-import com.brayandev.movilboxapp.ui.views.products.ProductUiState.Success
+import com.brayandev.movilboxapp.ui.views.products.uiState.CategoriesUiState
+import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState
+import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState.Error
+import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState.Loading
+import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState.Success
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductsScreen(productsViewModel: ProductsViewModel, navController: NavHostController) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var categories by rememberSaveable { mutableStateOf(emptyList<String>()) }
 
     val uiState by produceState<ProductUiState>(
         initialValue = Loading,
@@ -74,6 +80,16 @@ fun ProductsScreen(productsViewModel: ProductsViewModel, navController: NavHostC
     ) {
         lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
             productsViewModel.uiState.collect { value = it }
+        }
+    }
+
+    val uiStateCategory by produceState<CategoriesUiState>(
+        initialValue = CategoriesUiState.Loading,
+        key1 = lifecycle,
+        key2 = productsViewModel,
+    ) {
+        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+            productsViewModel.uiStateCategories.collect { value = it }
         }
     }
 
@@ -102,30 +118,50 @@ fun ProductsScreen(productsViewModel: ProductsViewModel, navController: NavHostC
                     .padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                when (uiState) {
-                    is Error -> {
-                    }
-
-                    Loading -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-
-                    is Success -> {
-                        ProductScreen(
-                            list = (uiState as Success).list,
-                            navController = navController,
-                        )
-                    }
-                }
+                uiStateProductScreen(
+                    uiState = uiState,
+                    navController = navController,
+                    categories = categories,
+                )
+                uiStateCategoryScreen(uiState = uiStateCategory) { categories = it }
             }
         },
     )
+}
+
+@Composable
+fun uiStateProductScreen(
+    uiState: ProductUiState,
+    navController: NavHostController,
+    categories: List<String>,
+) {
+    when (uiState) {
+        is Error -> {
+        }
+
+        Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is Success -> {
+            Log.d("List", "${uiState.list}")
+            Log.d("List", "$categories")
+            if (uiState.list.isEmpty()) {
+            } else {
+                ProductScreen(
+                    list = uiState.list,
+                    navController = navController,
+                    categories = categories,
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,26 +169,23 @@ fun ProductsScreen(productsViewModel: ProductsViewModel, navController: NavHostC
 fun ProductScreen(
     list: List<ProductModel>,
     navController: NavHostController,
+    categories: List<String>,
 ) {
     var filterText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(
-            TextFieldValue(),
-        )
+        mutableStateOf(TextFieldValue())
     }
 
     val filteredItems = rememberSaveable(filterText) {
-        list.filter {
-            it.title.contains(filterText.text, ignoreCase = true)
-        }
+        list.filter { it.title.contains(filterText.text, ignoreCase = true) }
     }
-
-    // var expanded by rememberSaveable { mutableStateOf(false) }
 
     val sheetStateCategory = rememberModalBottomSheetState()
     var isSheetOpenCategory by rememberSaveable { mutableStateOf(false) }
 
     val sheetStateFilter = rememberModalBottomSheetState()
     var isSheetOpenFilter by rememberSaveable { mutableStateOf(false) }
+
+    var selectedCategory by rememberSaveable { mutableStateOf("Categorias") }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -210,6 +243,7 @@ fun ProductScreen(
                 MyModalBottomSheet(
                     sheetState = sheetStateFilter,
                     isDismissed = { isSheetOpenFilter = it },
+                    itemSelected = {},
                 )
             }
         }
@@ -238,8 +272,10 @@ fun ProductScreen(
         }
         if (isSheetOpenCategory) {
             MyModalBottomSheet(
+                list = categories,
                 sheetState = sheetStateCategory,
                 isDismissed = { isSheetOpenCategory = it },
+                itemSelected = { selectedCategory = it },
             )
         }
 
@@ -297,6 +333,7 @@ fun MyModalBottomSheet(
     list: List<String> = listOf(),
     sheetState: SheetState,
     isDismissed: (Boolean) -> Unit,
+    itemSelected: (String) -> Unit,
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
@@ -305,10 +342,55 @@ fun MyModalBottomSheet(
         },
         containerColor = BackgroundItem,
     ) {
-        Icon(
-            imageVector = Icons.Rounded.Category,
-            contentDescription = "icon_filter",
-            tint = TextColor,
-        )
+        Column {
+            Row {
+                Icon(
+                    imageVector = Icons.Rounded.Category,
+                    contentDescription = "icon_filter",
+                    tint = TextColor,
+                )
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = stringResource(R.string.text_category),
+                    color = TextColor,
+                )
+            }
+            LazyColumn(modifier = Modifier.padding(12.dp)) {
+                items(list) { item ->
+                    Card {
+                        Icon(
+                            imageVector = Icons.Rounded.Category,
+                            contentDescription = "icon_filter",
+                            tint = TextColor,
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = item,
+                            color = TextColor,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun uiStateCategoryScreen(uiState: CategoriesUiState, categories: (List<String>) -> Unit) {
+    when (uiState) {
+        is CategoriesUiState.Error -> TODO()
+        CategoriesUiState.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is CategoriesUiState.SuccessCategories -> {
+            categories(uiState.list.categories)
+        }
     }
 }

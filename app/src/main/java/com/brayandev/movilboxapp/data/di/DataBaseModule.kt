@@ -23,4 +23,8 @@ object DataBaseModule {
     @Provides
     @Singleton
     fun provideProductDao(dataBase: DataBase) = dataBase.productDao()
+
+    @Provides
+    @Singleton
+    fun provideCategoryDao(dataBase: DataBase) = dataBase.categoryDao()
 }

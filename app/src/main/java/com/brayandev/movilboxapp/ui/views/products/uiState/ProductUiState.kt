@@ -1,4 +1,4 @@
-package com.brayandev.movilboxapp.ui.views.products
+package com.brayandev.movilboxapp.ui.views.products.uiState
 
 import com.brayandev.movilboxapp.domain.model.ProductModel
 

@@ -9,7 +9,7 @@ import com.brayandev.movilboxapp.domain.model.ProductModel
 data class ProductEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int = System.currentTimeMillis().hashCode(),
+    val id: Int = 0,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "price") val price: Double,
@@ -22,7 +22,7 @@ data class ProductEntity(
     @ColumnInfo(name = "images") val images: List<String>,
 )
 
-fun ProductEntity.toProductModel() = ProductModel(
+fun ProductEntity.productEntityToProductModel() = ProductModel(
     id = id,
     title = title,
     description = description,

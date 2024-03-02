@@ -1,4 +1,4 @@
-package com.brayandev.movilboxapp.domain.useCase
+package com.brayandev.movilboxapp.domain.useCase.product
 
 import com.brayandev.movilboxapp.data.repository.ProductRepository
 import javax.inject.Inject
