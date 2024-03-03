@@ -1,7 +1,10 @@
 package com.brayandev.movilboxapp.domain.model
 
+import android.os.Parcelable
 import com.brayandev.movilboxapp.data.local.dataBase.entity.ProductEntity
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class ProductModel(
     val id: Int,
     val title: String,
@@ -14,7 +17,7 @@ data class ProductModel(
     val category: String,
     val thumbnail: String,
     val images: List<String>,
-)
+) : Parcelable
 
 fun ProductModel.productModelToProductEntity() = ProductEntity(
     id = id,

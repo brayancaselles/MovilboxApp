@@ -3,9 +3,7 @@ package com.brayandev.movilboxapp.data.local
 import com.brayandev.movilboxapp.data.local.dataBase.dao.CategoryDao
 import com.brayandev.movilboxapp.data.local.dataBase.dao.ProductDao
 import com.brayandev.movilboxapp.data.local.dataBase.entity.CategoriesEntity
-import com.brayandev.movilboxapp.data.local.dataBase.entity.entityToModel
 import com.brayandev.movilboxapp.data.local.dataBase.entity.productEntityToProductModel
-import com.brayandev.movilboxapp.domain.model.CategoriesModel
 import com.brayandev.movilboxapp.domain.model.ProductModel
 import com.brayandev.movilboxapp.domain.model.productModelToProductEntity
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +19,10 @@ class LocalDataSource @Inject constructor(
         productDao.getAllProducts()
             .map { products -> products.map { it.productEntityToProductModel() } }
 
-    val categories: Flow<CategoriesModel> = categoryDao.getCategories().map { it.entityToModel() }
+    val categories: Flow<List<String>> = categoryDao.getCategories().map { it.categories }
+
+    fun product(productId: Int): Flow<ProductModel> =
+        productDao.getProduct(productId).map { item -> item.productEntityToProductModel() }
 
     suspend fun countProducts(): Int = productDao.countProducts()
 

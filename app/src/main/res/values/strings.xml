@@ -5,4 +5,16 @@
     <string name="text_search_product">Buscar Productos por nombre</string>
     <string name="text_name_product">Nombre del producto</string>
     <string name="text_category">Categorias</string>
+    <string name="text_filter">Filtrar por:</string>
+    <string name="text_confir">Confirmar</string>
+    <string name="text_title_error">Error</string>
+    <string name="text_message_error">Upps ah ocurrido un error obteniendo los datos</string>
+    <string name="text_cancel">Cancelar</string>
+    <string name="text_replay">Inténtalo de nuevo más tarde</string>
+    <string name="text_empty_list">No hay productos disponibles en esta categoria</string>
+    <string name="text_title_detail">Detalle</string>
+    <string name="text_rating">"Rating: "</string>
+    <string name="text_welcome">Bienvenido</string>
+    <string name="text_product_delete_success">Producto eliminado correctamente</string>
+    <string name="text_warning">Atencion!</string>
 </resources>

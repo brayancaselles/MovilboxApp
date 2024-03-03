@@ -7,11 +7,11 @@ import com.brayandev.movilboxapp.domain.useCase.category.RequestCategoriesUseCas
 import com.brayandev.movilboxapp.domain.useCase.product.GetProductUseCase
 import com.brayandev.movilboxapp.domain.useCase.product.RequestProductUseCase
 import com.brayandev.movilboxapp.ui.views.products.uiState.CategoriesUiState
-import com.brayandev.movilboxapp.ui.views.products.uiState.CategoriesUiState.SuccessCategories
 import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState
 import com.brayandev.movilboxapp.ui.views.products.uiState.ProductUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -32,19 +32,22 @@ class ProductsViewModel @Inject constructor(
         .catch { ProductUiState.Error(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ProductUiState.Loading)
 
-    val uiStateCategories: StateFlow<CategoriesUiState> =
-        getCategoriesUseCase().map(::SuccessCategories)
-            .catch { CategoriesUiState.Error(it) }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                CategoriesUiState.Loading,
-            )
+    private var _uiStateCategories = MutableStateFlow(CategoriesUiState())
+    val uiStateCategories: StateFlow<CategoriesUiState> = _uiStateCategories
 
     init {
         viewModelScope.launch {
-            async { requestProductUseCase.invoke() }.await()
-            async { requestCategoriesUseCase.invoke() }.await()
+            try {
+                async { requestProductUseCase.invoke() }.await()
+                async { requestCategoriesUseCase.invoke() }.await()
+                async {
+                    getCategoriesUseCase.invoke().collect { listCategories ->
+                        _uiStateCategories.value = CategoriesUiState(list = listCategories)
+                    }
+                }.await()
+            } catch (e: Exception) {
+                ProductUiState.Error(e)
+            }
         }
     }
 }

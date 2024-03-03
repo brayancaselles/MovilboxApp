@@ -2,7 +2,6 @@ package com.brayandev.movilboxapp.data.repository
 
 import com.brayandev.movilboxapp.data.local.LocalDataSource
 import com.brayandev.movilboxapp.data.remote.RemoteDataSource
-import com.brayandev.movilboxapp.domain.model.CategoriesModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -11,7 +10,7 @@ class CategoryRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) {
 
-    val categories: Flow<CategoriesModel> = localDataSource.categories
+    val categories: Flow<List<String>> = localDataSource.categories
 
     suspend fun requestCategories() {
         val isDBEmpty = localDataSource.countCategories() == 0

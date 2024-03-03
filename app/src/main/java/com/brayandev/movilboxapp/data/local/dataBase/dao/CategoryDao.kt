@@ -2,6 +2,7 @@ package com.brayandev.movilboxapp.data.local.dataBase.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.brayandev.movilboxapp.data.local.dataBase.entity.CategoriesEntity
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
 
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategories(categories: CategoriesEntity)
 
     @Query("SELECT * FROM Categories_table ")
